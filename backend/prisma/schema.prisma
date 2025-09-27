@@ -1,0 +1,54 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Campaign {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  contents    ContentPiece[]
+}
+
+model ContentPiece {
+  id          String       @id @default(uuid())
+  campaignId  String
+  campaign    Campaign     @relation(fields: [campaignId], references: [id])
+  language    String       @default("en")
+  text        String?      // editable text (can start empty if AI generates)
+  state       ContentState @default(DRAFT)
+  aiMetadata  Json?        // keywords, tone, sentiment, etc.
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  reviews     ReviewAction[]
+}
+
+model ReviewAction {
+  id           String       @id @default(uuid())
+  contentId    String
+  contentPiece ContentPiece @relation(fields: [contentId], references: [id])
+  reviewer     String       // maybe i wont use this, leaving it for now
+  action       ReviewState
+  comment      String?
+  createdAt    DateTime     @default(now())
+}
+
+enum ContentState {
+  DRAFT
+  AI_SUGGESTED
+  REVIEWED
+  APPROVED
+  REJECTED
+}
+
+enum ReviewState {
+  APPROVED
+  REJECTED
+  EDITED
+}
