@@ -8,22 +8,30 @@ generator client {
 }
 
 model Campaign {
-  id          String        @id @default(uuid())
-  name        String
-  description String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  contents    ContentPiece[]
+  id                   String        @id @default(uuid())
+  name                 String
+  description          String?
+  defaultInstructions  String?       // Default AI generation instructions for this campaign
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  contents             ContentPiece[]
 }
 
 model ContentPiece {
   id          String       @id @default(uuid())
   campaignId  String
   campaign    Campaign     @relation(fields: [campaignId], references: [id])
+  type        String       @default("general") // headline, description, body, etc.
   language    String       @default("en")
-  text        String?      // editable text (can start empty if AI generates)
+  text        String?
   state       ContentState @default(DRAFT)
-  aiMetadata  Json?        // keywords, tone, sentiment, etc.
+  aiMetadata  Json?        // keywords, tone, sentiment, etc (probably won't use it)
+  reviewNotes String?
+  reviewedBy  String?
+  reviewedAt  DateTime?
+  editedBy    String?
+  editedAt    DateTime?
+  history     Json?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   reviews     ReviewAction[]
@@ -45,6 +53,7 @@ enum ContentState {
   REVIEWED
   APPROVED
   REJECTED
+  NEEDS_REVISION
 }
 
 enum ReviewState {
