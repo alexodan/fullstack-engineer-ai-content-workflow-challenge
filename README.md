@@ -125,5 +125,14 @@ This challenge is designed to be **flexible**. Some tips:
 
 ## 🏁 Good luck and have fun building!
 
+---
+
+## 📖 Project Setup & Documentation
+
+For detailed setup instructions, please see:
+- **[Setup Guide](./docs/SETUP.md)** - Complete setup instructions for Docker and local development
+- **[API Documentation](./docs/API.md)** - API endpoints and usage (if available)
+- **[Architecture](./docs/ARCHITECTURE.md)** - System design and technical decisions (if available)
+
 
 ```
